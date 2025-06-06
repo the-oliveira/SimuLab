@@ -9,9 +9,10 @@ def conectar_bd():
             password='123',
             database='simulab_db'
         )
-        
+
         if conn.is_connected():
             #Conexão feita com sucesso
+            print('Conexão bem sucedida')
             return conn
     except Error as e:
         print(f'Erro ao conectar com o banco de dados {e}')
@@ -24,7 +25,8 @@ def executar_query(conexao, query, params=None):
         if conexao and conexao.is_connected():
             cursor = conexao.cursor(dictionary = True) #Para retornar dicionarios como resultado
             cursor.execute(query, params or ())
-            conexao.commit() 
+            conexao.commit()
+            print('Query executada com sucesso') 
 
     except Error as e:
         print(f'Erro ao executar query: {e}')
@@ -34,6 +36,7 @@ def executar_query(conexao, query, params=None):
     finally:
         if cursor:
             cursor.close()
+            print('Cursor fechado, executar query finalizado.')
     return None
 
 
@@ -44,6 +47,7 @@ def consultar_dados(conexao, query, params=None):
             cursor = conexao.cursor(dictionary = True)
             cursor.execute(query, params or ())
             resultados = cursor.fetchall()
+            print('Consulta de dados finalizada com sucesso')
             return resultados
     
     except Error as e:

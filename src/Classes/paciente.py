@@ -1,4 +1,5 @@
 from src.BancoDados.dbConfig import conectar_bd, executar_query, consultar_dados
+from mysql.connector import Error
 
 def cadastrar_paciente(dados_paciente):
     
@@ -10,7 +11,7 @@ def cadastrar_paciente(dados_paciente):
             executar_query(conectar_bd(), queryConstructor)
             return 'Cadastro realizado com sucesso'
 
-    except:
-        return 'Tente novamente'
-    
-    
+    except Error as e:
+        return f'Erro ao executar cadastro de pacientes {e}'
+
+
