@@ -1,4 +1,8 @@
-from datetime import datetime
+from jinja2 import Environment, PackageLoader, select_autoescape
+env = Environment(
+    loader=PackageLoader("template"),
+    autoescape=select_autoescape()
+)
 
-data_atual = datetime.now()
-print(data_atual)
+template = env.get_template("src\Web\template\index.html")
+print(template.render(the=''))
