@@ -5,8 +5,8 @@ def conectar_bd():
     try:
         conn = mysql.connector.connect(
             host='localhost',
-            user='adminLab',
-            password='123',
+            user='root',
+            password='****',
             database='simulab_db'
         )
 
