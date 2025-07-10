@@ -6,8 +6,9 @@ from mysql.connector import Error
 def consultar_pacientes_cpf(dados_paciente):
     try:
         cpf = dados_paciente
-        query_cpf = f'SELECT * FROM pacientes WHERE cpf = {cpf}'
-        res = consultar_dados(conectar_bd(), query_cpf)
+        query_cpf = 'SELECT * FROM pacientes WHERE cpf = %s'
+        params = (cpf,)
+        res = consultar_dados(conectar_bd(), query_cpf, params)
         print(res)
         if res: print('Dados retornados com sucesso!')
         return res
@@ -19,8 +20,9 @@ def consultar_pacientes_cpf(dados_paciente):
 def consultar_pacientes_ra(dados_paciente):
     try:
         ra = dados_paciente
-        query_ra = f'SELECT * FROM pacientes WHERE id = {ra}'
-        res = consultar_dados(conectar_bd(), query_ra)
+        query_ra = 'SELECT * FROM pacientes WHERE id = %s'
+        params = (ra,)
+        res = consultar_dados(conectar_bd(), query_ra, params)
         print(res)
         if res: print('Dados consultados com sucesso')
         return res

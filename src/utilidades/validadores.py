@@ -6,8 +6,9 @@ def verificar_consulta(dados_paciente, tipo_consulta):
     try:
         if tipo_consulta == 'cpf':
             cpf = dados_paciente['cpf']
-            query_cpf = f'SELECT cpf FROM pacientes WHERE cpf = {cpf}'
-            res = consultar_dados(conectar_bd(), query_cpf)
+            query_cpf = 'SELECT cpf FROM pacientes WHERE cpf = cpf'
+            params = (cpf,)
+            res = consultar_dados(conectar_bd(), query_cpf, params)
             print(res)
             if len(res) > 5:
                 print('CPF encontrado, seguir com a consulta')
@@ -19,8 +20,9 @@ def verificar_consulta(dados_paciente, tipo_consulta):
         
         elif tipo_consulta == 'id':
             id = dados_paciente['id']
-            query_id = f'SELECT id FROM pacientes WHERE id = {id}'
-            res = consultar_dados(conectar_bd(), query_id)
+            query_id = 'SELECT id FROM pacientes WHERE id = id'
+            params = (id,)
+            res = consultar_dados(conectar_bd(), query_id, params)
             print(res)
             if len(res) > 1:
                 print('Id encontrado, seguir com a consulta')

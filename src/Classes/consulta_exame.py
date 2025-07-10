@@ -4,8 +4,13 @@ from mysql.connector import Error
 
 def consultar_exames(cpf, data):
     try:
-        query_consulta_exame = f'SELECT * FROM exames WHERE cpf = {cpf} anda data_cadastro = {data}'
-        res = consultar_dados(conectar_bd(), query_consulta_exame)
+        query_consulta_exame = "SELECT * FROM exames WHERE cpf = cpf anda data_cadastro = data" \
+                                "VALUES (%s, %s)"
+        params = (
+            cpf,
+            data
+        )
+        res = consultar_dados(conectar_bd(), query_consulta_exame, params)
         if res: 
             print('Consulta realizada com sucesso')
             return res
