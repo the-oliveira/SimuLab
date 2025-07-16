@@ -51,7 +51,7 @@ def consultar_dados(conexao, query, params=None):
             return resultados
     
     except Error as e:
-        print('Erro ao executar query de consulta: {e}')
+        print(f'Erro ao executar query de consulta: {e}')
     
     finally:
         if cursor:

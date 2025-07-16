@@ -2,7 +2,7 @@ from src.BancoDados.dbConfig import conectar_bd, executar_query, consultar_dados
 from mysql.connector import Error
 
 
-class paciente: 
+class Paciente: 
 
     def __init__(self, nome = None, idade = None, cpf = None, rg = None, cep = None, endereco = None, complemento = None, num_casa = None, email = None, nome_mae = None, id = None):
         self.nome = nome
@@ -17,62 +17,99 @@ class paciente:
         self.nome_mae = nome_mae
         self.id = id
 
-    
-    def cadastrar_paciente(self):
+
+    def salvar(self):
         try:
-            #Preparar dados para realizar a query
-            if len(self.dados_paciente) > 0:
-                if self.dados_paciente.get('cpf') and self.dados_paciente.get('nome') and self.dados_paciente.get('rg'):
-                    query = "INSERT INTO pacientes (nome, idade, cpf, rg, cep, endereco, complemento, num_casa, email, nome_mae) " \
-                            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                    
+            #Validação inicial dos dados obrigatórios
+            if self.nome and self.idade and self.cpf and self.rg and self.cep and self.endereco and self.num_casa and self.nome_mae:
+                #Verificar se o id está definido na chamada para montar os parametros
+                if self.id:
                     params = (
-                        self.dados_paciente.get('idade'),
-                        self.dados_paciente.get('cpf'),
-                        self.dados_paciente.get('rg'),
-                        self.dados_paciente.get('nome'),
-                        self.dados_paciente.get('cep'),
-                        self.dados_paciente.get('endereco'),
-                        self.dados_paciente.get('complemento'),
-                        self.dados_paciente.get('num_casa'),
-                        self.dados_paciente.get('email'),
-                        self.dados_paciente.get('nome_mae')
+                        self.nome,
+                        self.idade,
+                        self.cpf,
+                        self.rg,
+                        self.cep,
+                        self.endereco,
+                        self.complemento,
+                        self.num_casa,
+                        self.email,
+                        self.nome_mae,
+                        self.id
                     )
-                    executar_query(conectar_bd(), query, params)
-                    return 'Cadastro realizado com sucesso'
+                    query = "UPDATE pacientes SET nome = %s, idade = %s, cpf = %s, rg = %s, cep = %s, endereco = %s, complemento = %s, num_casa = %s, email = %s, nome_mae = %s WHERE id = %s "
+                    print('Atualizando dados do paciente.')
                 else:
-                    return f'Dados do paciente vieram incompletos!'
-            
+                    params = (
+                        self.nome,
+                        self.idade,
+                        self.cpf,
+                        self.rg,
+                        self.cep,
+                        self.endereco,
+                        self.complemento,
+                        self.num_casa,
+                        self.email,
+                        self.nome_mae,
+                    )
+                    query = "INSERT INTO pacientes (nome, idade, cpf, rg, cep, endereco, complemento, num_casa, email, nome_mae) " \
+                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                    print('Inserindo dados do paciente na tabela.')
+  
             else:
-                return f'Dados do paciente vieram incompletos!'
+                print(f'Dados do paciente vieram incompletos!')
+                return None
 
-        except Error as e:
-            return f'Erro ao executar cadastro de pacientes {e}'
-
-
-    def consultar_pacientes_cpf(self):
-        try:
-            cpf = self.dados_paciente
-            query_cpf = 'SELECT * FROM pacientes WHERE cpf = %s'
-            params = (cpf,)
-            res = consultar_dados(conectar_bd(), query_cpf, params)
-            print(res)
-            if res: print('Dados retornados com sucesso!')
-            return res
+            res = executar_query(conectar_bd(), query, params)
+            
+            print(f'Finalizando função Salvar com sucesso. {res}')
+            return None
         
         except Error as e:
-            print(f'consulta retornou com erro {e}')
+            print(f'Erro ao executar cadastro de pacientes {e}')
+            return None
 
-
-    def consultar_pacientes_ra(self):
+    @classmethod
+    def buscar_por_cpf(cls, cpf):
         try:
-            ra = self.dados_paciente
-            query_ra = 'SELECT * FROM pacientes WHERE id = %s'
-            params = (ra,)
-            res = consultar_dados(conectar_bd(), query_ra, params)
-            print(res)
-            if res: print('Dados consultados com sucesso')
-            return res
+            if cpf:
+                #Realiza a consulta de dados baseado no CPF se ele existir
+                query_cpf = 'SELECT * FROM pacientes WHERE cpf = %s'
+                params = (cpf,)
+                res = consultar_dados(conectar_bd(), query_cpf, params)
+                print(res)
+                if res: 
+                    print('Dados retornados com sucesso!')
+                    return cls(*res[0])
+                else:
+                    res = None
+                    return res
+            else:
+                print(f'Erro ao verificar CPF {cpf}')
+                return None
+        except Error as e:
+            print(f'consulta retornou com erro {e}')
+            return None
+
+    @classmethod
+    def buscar_por_id(cls, id):
+        try:
+            if id:
+                #Realizar a busca utilizando o id do paciente se ele existir
+                query_id = 'SELECT * FROM pacientes WHERE id = %s'
+                params = (id,)
+                res = consultar_dados(conectar_bd(), query_id, params)
+                print(res)
+                if res: 
+                    print('Dados consultados com sucesso')
+                    return cls(*res[0])
+                else: 
+                    return None
+            
+            else:
+                print(f'Erro ao verificar id {id}')
+                return None
         
         except Error as e:
             print(f'Erro ao consultar dados {e}')
+            return None
