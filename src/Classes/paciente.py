@@ -1,5 +1,6 @@
 from src.BancoDados.dbConfig import conectar_bd, executar_query, consultar_dados
 from mysql.connector import Error
+import json
 
 
 class Paciente: 
@@ -69,6 +70,20 @@ class Paciente:
             print(f'Erro ao executar cadastro de pacientes {e}')
             return None
 
+
+    @classmethod
+    def buscar_todos(cls):
+        query_busca = 'SELECT * FROM pacientes'
+        res = consultar_dados(conectar_bd(), query_busca)
+        if res:
+            print(f'Dados obtidos com sucesso: {res}, {type(res)}')
+            return res
+        else:
+            print(f'RES veio sem valores {res}')
+            return None
+        
+
+
     @classmethod
     def buscar_por_cpf(cls, cpf):
         try:
@@ -113,3 +128,4 @@ class Paciente:
         except Error as e:
             print(f'Erro ao consultar dados {e}')
             return None
+        
