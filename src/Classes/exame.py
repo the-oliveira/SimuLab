@@ -1,5 +1,4 @@
 from src.BancoDados.dbConfig import conectar_bd, executar_query, consultar_dados
-from mysql.connector import Error
 from datetime import datetime
 
 
@@ -44,8 +43,8 @@ class Exame:
                 print('Dados de exame incompletos')
                 return None
             
-        except Error as e:
-            print(f'DEBUG: Erro ao cadastrar exame: {e}')
+        except Exception as e:
+            print(f'DEBUG: Erro ao cadastrar exame: {str(e)}')
             return None
         
 
@@ -64,8 +63,8 @@ class Exame:
             else:
                 print('Consulta não retornou dados! Verifique novamente')
                 return None
-        except Error as e:
-            print(f'Erro ao tentar relizar consulta de exames {e}')
+        except Exception as e:
+            print(f'Erro ao tentar relizar consulta de exames {str(e)}')
             return None
         
 
@@ -86,6 +85,6 @@ class Exame:
                 print('Consulta não retornou dados! Verifique novamente')
                 return None
         
-        except Error as e:
-            print(f'Erro ao tentar relizar consulta de exames {e}')
+        except Exception as e:
+            print(f'Erro ao tentar relizar consulta de exames {str(e)}')
             return None

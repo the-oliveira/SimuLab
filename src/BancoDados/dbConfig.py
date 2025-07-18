@@ -27,17 +27,18 @@ def executar_query(conexao, query, params=None):
             cursor.execute(query, params or ())
             conexao.commit()
             print('Query executada com sucesso') 
+            return True
 
     except Error as e:
         print(f'Erro ao executar query: {e}')
         if conexao:
             conexao.rollback()
-            return None
+            return False
     finally:
         if cursor:
             cursor.close()
             print('Cursor fechado, executar query finalizado.')
-    return None
+    return False
 
 
 def consultar_dados(conexao, query, params=None):

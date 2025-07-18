@@ -1,5 +1,4 @@
 from src.BancoDados.dbConfig import conectar_bd, executar_query, consultar_dados
-from mysql.connector import Error
 import json
 
 
@@ -64,10 +63,10 @@ class Paciente:
             res = executar_query(conectar_bd(), query, params)
             
             print(f'Finalizando função Salvar com sucesso. {res}')
-            return None
+            return params
         
-        except Error as e:
-            print(f'Erro ao executar cadastro de pacientes {e}')
+        except Exception as e:
+            print(f'Erro ao executar cadastro de pacientes {str(e)}')
             return None
 
 
@@ -102,8 +101,8 @@ class Paciente:
             else:
                 print(f'Erro ao verificar CPF {cpf}')
                 return None
-        except Error as e:
-            print(f'consulta retornou com erro {e}')
+        except Exception as e:
+            print(f'consulta retornou com erro {str(e)}')
             return None
 
     @classmethod
@@ -125,7 +124,21 @@ class Paciente:
                 print(f'Erro ao verificar id {id}')
                 return None
         
-        except Error as e:
-            print(f'Erro ao consultar dados {e}')
+        except Exception as e:
+            print(f'Erro ao consultar dados {str(e)}')
             return None
         
+    @classmethod
+    def excluir_pac(cls, id, cpf):
+        try:
+            query_exclusao = 'DELETE FROM pacientes WHERE id = %s AND cpf = %s'
+            params = (id, cpf)
+            res = executar_query(conectar_bd() ,query_exclusao, params)
+            if res:
+                print('Exclusão executada com sucesso')
+                return True
+            else:
+                return False
+        
+        except Exception as e:
+            return False
