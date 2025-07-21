@@ -127,6 +127,37 @@ def delete_paciente(id):
         return jsonify({'erro':f'Erro ao excluir paciente{e}'}), 500
 
     
+@app.route('/web/pacientes', methods=['GET'])
+def  list_pac():
+    try:
+        lista_pacientes = pac.Paciente.buscar_todos()
+        
+        return render_template('pacientes.html', pacientes = lista_pacientes)
+    
+    except Exception as e:
+        return jsonify({'erro':f'erro ao listar pacientes {e}'}), 500
+
+
+@app.route('/web/pacientes/novo', methods=['GET'])
+def novo_pac():
+    try:
+        return render_template('form_paciente.html')
+    
+    except Exception as e:
+        return jsonify({'erro':f'erro ao cadastrar novo paciente {e}'}), 500
+    
+
+@app.route('/web/pacientes/editar/<int:id>', methods=['GET'])
+def editar_pac(id):
+    try:
+        buscar_paciente = pac.Paciente.buscar_por_id(id)
+        if buscar_paciente:
+            return render_template('form_paciente.html', paciente = buscar_paciente)
+        else:
+            return 'Paciente não encontrado', 404
+
+    except Exception as e:
+        return jsonify({'erro':f'erro ao cadastrar novo paciente {e}'}), 500
 
 
 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimuLab - Pacientes</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Idade</th>
+                <th>CPF</th>
+                <th>RG</th>
+                <th>CEP</th>
+                <th>Endereço</th>
+                <th>Complemento</th>
+                <th>Numero</th>
+                <th>E-mail</th>
+                <th>Nome da mãe</th>
+                <th colspan="2">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paciente in pacientes %}
+            <tr>
+                <td>{{paciente.id}}</td>
+                <td>{{paciente.nome}}</td>
+                <td>{{paciente.idade}}</td>
+                <td>{{paciente.cpf}}</td>
+                <td>{{paciente.rg}}</td>
+                <td>{{paciente.cep}}</td>
+                <td>{{paciente.endereco}}</td>
+                <td>{{paciente.complemento}}</td>
+                <td>{{paciente.num_casa}}</td>
+                <td>{{paciente.email}}</td>
+                <td>{{paciente.nome_mae}}</td>
+                <td>
+                    <a href="/web/pacientes/editar/{{ paciente.id }}">Editar</a>
+                </td>
+                <td>
+                    <a href="/web/pacientes/remover/{{ paciente.id }}">Remover</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+
