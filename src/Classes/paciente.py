@@ -74,9 +74,27 @@ class Paciente:
     def buscar_todos(cls):
         query_busca = 'SELECT * FROM pacientes'
         res = consultar_dados(conectar_bd(), query_busca)
+        lista_pacientes = []
         if res:
-            print(f'Dados obtidos com sucesso: {res}, {type(res)}')
-            return res
+            print(f'Dados obtidos com sucesso')
+
+            for pac in res:
+                obj_paciente = Paciente(
+                    nome=pac['nome'],
+                    idade=pac['idade'],
+                    cpf=pac['cpf'],
+                    rg=pac['rg'],
+                    cep=pac['cep'],
+                    endereco=pac['endereco'],
+                    complemento=pac['complemento'],
+                    num_casa=pac['num_casa'],
+                    email=pac['email'],
+                    nome_mae=pac['nome_mae'],
+                    id=pac['id']
+                )
+            
+                lista_pacientes.append(obj_paciente)
+            return lista_pacientes
         else:
             print(f'RES veio sem valores {res}')
             return None
@@ -142,3 +160,29 @@ class Paciente:
         
         except Exception as e:
             return False
+        
+    @classmethod
+    def atualizar_pac(cls, id, dados_novos):
+    
+        dados_pac = cls.buscar_por_id(id)
+        if dados_pac:
+
+            dados_pac.nome= dados_novos.get('nome', dados_pac.nome)
+            dados_pac.idade= dados_novos.get('idade', dados_pac.idade)
+            dados_pac.cpf= dados_novos.get('cpf', dados_pac.cpf)
+            dados_pac.rg= dados_novos.get('rg', dados_pac.rg)
+            dados_pac.cep= dados_novos.get('cep', dados_pac.cep)
+            dados_pac.endereco= dados_novos.get('endereco', dados_pac.endereco)
+            dados_pac.complemento= dados_novos.get('complemento', dados_pac.complemento)
+            dados_pac.num_casa= dados_novos.get('num_casa', dados_pac.num_casa)
+            dados_pac.email= dados_novos.get('email', dados_pac.email)
+            dados_pac.nome_mae= dados_novos.get('nome_mae', dados_pac.nome_mae)
+
+        else:
+            return dados_pac
+
+        try:
+            return dados_pac.salvar()
+
+        except Exception as e:
+            raise Exception(f'erro ao salvar {e}')

@@ -11,8 +11,7 @@ class Exame:
         self.status = status
         self.paciente_id = paciente_id
 
-
-    def salvar(self):
+    def salvar_exam(self):
         try:
             if self.nom_exame and self.status and self.paciente_id:
                 if self.id_exame:
@@ -37,16 +36,27 @@ class Exame:
                 
                 res = executar_query(conectar_bd(), query_exame, params)
                 print(f'Dados salvos com sucesso! {res}')
-                return None
+                return True
 
             else:
                 print('Dados de exame incompletos')
-                return None
+                return False
             
         except Exception as e:
             print(f'DEBUG: Erro ao cadastrar exame: {str(e)}')
             return None
         
+
+    def to_dict(self):
+        dict_exame = {
+            "id_exame":self.id_exame,
+            "nom_exame":self.nom_exame,
+            "data":self.data.isoformat() if self.data else None,
+            "status":self.status,
+            "paciente_id":self.paciente_id
+        }
+        
+        return dict_exame
 
     @classmethod
     def buscar_exame_por_id(cls, id_exame, data):
@@ -69,18 +79,27 @@ class Exame:
         
 
     @classmethod
-    def buscar_exame_por_paciente(cls, paciente_id, data):
+    def buscar_exame_por_paciente(cls, paciente_id):
         try:
-            query_consulta_exame = "SELECT * FROM exames WHERE paciente_id = %s and data_cadastro = %s"
+            query_consulta_exame = "SELECT * FROM exames WHERE paciente_id = %s"
             params = (
                 paciente_id,
-                data
             )
             res = consultar_dados(conectar_bd(), query_consulta_exame, params)
-            
+            lista_exames = []
             if res:
                 print('Consulta realizada com sucesso')
-                return cls(*res[0])
+                for exame in res:
+                    obj_exame = Exame(
+                        id_exame=exame['id_exame'],
+                        nom_exame=exame['nom_exame'],
+                        data=exame['data'],
+                        status=exame['status'],
+                        paciente_id=exame['paciente_id']
+                    )
+
+                    lista_exames.append(obj_exame)
+                return lista_exames
             else:
                 print('Consulta não retornou dados! Verifique novamente')
                 return None
@@ -88,3 +107,4 @@ class Exame:
         except Exception as e:
             print(f'Erro ao tentar relizar consulta de exames {str(e)}')
             return None
+        
