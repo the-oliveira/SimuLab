@@ -59,7 +59,7 @@ class Paciente:
             else:
                 print(f'Dados do paciente vieram incompletos!')
                 return None
-
+            db = get_db()
             res = executar_query(conectar_bd(), query, params)
             
             print(f'Finalizando função Salvar com sucesso. {res}')

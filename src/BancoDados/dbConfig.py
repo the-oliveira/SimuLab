@@ -1,13 +1,16 @@
 import mysql.connector
 from mysql.connector import Error
+import os
 
+
+"""
 def conectar_bd():
     try:
         conn = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='****',
-            database='simulab_db'
+            host=os.getenv('host'),
+            user=os.getenv('user'),
+            password=os.getenv('password'),
+            database=os.getenv('database')
         )
 
         if conn.is_connected():
@@ -17,6 +20,7 @@ def conectar_bd():
     except Error as e:
         print(f'Erro ao conectar com o banco de dados {e}')
         return None
+"""
     
 
 def executar_query(conexao, query, params=None):

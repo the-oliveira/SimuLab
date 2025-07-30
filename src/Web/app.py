@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, Response
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, Response, g
 import xml.etree.ElementTree as et
 #from BancoDados import dbConfig, examesDB, pacientesDB
 from src.Classes import exame as exa, paciente as pac
-
+from mysql.connector import Error
 #from utilidades import validadores
+import os
+import mysql.connector
 
 
 app = Flask(__name__)
@@ -11,6 +13,38 @@ app = Flask(__name__)
 @app.route('/')
 def pagina_inicial():
     return 'Ola mundo'
+
+
+def get_db():
+    try:
+        if 'db' in g:
+            return g.db
+        else:
+            g.db = mysql.connector.connect(
+                host=os.getenv('host'),
+                user=os.getenv('user'),
+                password=os.getenv('password'),
+                database=os.getenv('database')
+            )
+    except Error as e:
+        print(f'Erro ao conectar com o banco de dados {e}')
+        g.db = None
+    
+    return g.db
+
+
+@app.teardown_appcontext()
+def close_db(g=None):
+   try:
+        db = g.pop('db', None)
+        if db is not None:
+           db.close()
+           return
+   except Exception as e:
+       print(f'erro {e}')
+       return
+           
+
 
 
 @app.route('/pacientes', methods=['GET'])
